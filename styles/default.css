@@ -1,0 +1,17 @@
+body {
+  background-image: url(../imgs.jpg);
+  color: white;
+  font-size: 40px;
+  padding: 20px;
+}
+
+header {
+  font-size: 40px;
+  color:white;
+  text-align:center;
+}
+
+a {
+  text-decoration: none;
+  color: blue;
+}
