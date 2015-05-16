@@ -1,9 +1,21 @@
+/* FONT FACES */
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/lora/Lora-Regular.ttf') format('truetype');
+}
+/* NAV */
+
+
 body {
   /* background-image: url(../imgs.jpg); */
   background-color: black;
   color: white;
   font-size: 20px;
-  padding: 20px;} 
+  padding: 20px;
+  font-family: 'Lora';
+}
 
 header {
   font-size: 40px;
@@ -17,9 +29,9 @@ a {
 }
 
 .pic1 {
-height: 100%;
-width:32%;
-display: inline-block;
+	height: 100%;
+	width:32%;
+	display: inline-block;
 }
 
 .pic1 img {
@@ -27,10 +39,16 @@ display: inline-block;
     height: 100%;
 }
 
+.pic1 p {
+	position: fixed;
+	padding-left: 40px;
+
+}
+
 .pic2 {
-height: 100%;
-width:32%;
-display: inline-block;
+	height: 100%;
+	width:32%;
+	display: inline-block;
 }
 
 .pic2 img {
@@ -39,9 +57,9 @@ display: inline-block;
 }
 
 .pic3 {
-height: 100%;
-width:32%;
-display: inline-block;
+	height: 100%;
+	width:32%;
+	display: inline-block;
 }
 
 .pic3 img {
