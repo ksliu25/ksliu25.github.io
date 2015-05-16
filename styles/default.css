@@ -39,12 +39,6 @@ a {
     height: 100%;
 }
 
-.pic1 p {
-	position: fixed;
-	padding-left: 40px;
-
-}
-
 .pic2 {
 	height: 100%;
 	width:32%;
@@ -67,6 +61,16 @@ a {
     height: 100%;
 }
 
+.pic1 p {
+	font-size: 40px;
+	position: absolute;
+	padding-left: 200px;
+	padding-top: 325px;
+
+}
+
+
+
 img {
     opacity: 0.6;
     transition: opacity 1s ease-in-out;
@@ -79,3 +83,4 @@ img:hover {
     -moz-transition: opacity .55s ease-in-out;
     -webkit-transition: opacity .55s ease-in-out;
 }
+
