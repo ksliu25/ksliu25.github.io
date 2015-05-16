@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<head>
+  <title>Blog template</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="../styles/default.css">
+</head>
+
+<main>
+  <h1>Arrays and Hashes</h1>
+  <h2>Data types involving numbers or dictionaries?</h2>
+  <h4>5/15/15</h4>
+
+  <section>
+    <p>
+      Let's talk about Arrays and Hashes from my limited understanding and some of the cool things you can do with them. To first understand why we need either data structure, we have to ask ourselves what sort of problem we're trying to solve. 
+    </p>
+    <p>
+      If you're looking to store numbers or strings in a list (if we're talking about python here), then you might want to store them in an Array, like a stack. When I say stack, imagine a huge stack of dvds, where the Array is the stack itself and the individual items are items in the Array. You can interact with them however you'd like, "popping" out items from the very top of the array or pushing them in in a First in First out fashion (FIFO). Also, these items are integer-indexed AND ordered. Here's an example below.
+    </p>
+    <code> array = [0,1,2,3] </code>
+    <p>
+      This is a simple array containg 4 items represented by consecutive numbers starting from 1. Not very interesting, but you can interact with these items a number of ways and most methods from the module Enumerable such as each, inject, map, select -- these are all fun ones! Say I wanted to take each item in the array and run a code block with them. Easy!
+    </p>
+    <code> array.each {|x| x * 2} </code>
+    <p>
+      Each is one of the most common ways in ruby to iterate through an array. While most languages use for loops, ruby has the nifty each and map function, which are pretty similar in function.
+    </p>
+    <p>
+      Hashes on the other hand are considered dictionaries. They're like Array's cousin that doesn't care about order OR integered indexes. In fact, things in Hashes come in a <code> :key => value </code> pair. An analogy of this would be where the key, most often a symbol, is a word while the value is the definition of that word. Hashes are used pretty often in real life settings to store user information like email, username, passwords... the like. Makes sense right? If we wanted a hash representing a user we could do <code> {user: Ken, email: ksliu25@gmail.com, password: password} </code>
+    </p>
+
+      <!-- copy and paste as many sections as you want to add paragraphs -->
+  </section>
+</main>
+
