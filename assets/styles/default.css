@@ -1,3 +1,8 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
 /* FONT FACES */
 @font-face {
   font-family: 'Lora';
@@ -57,8 +62,7 @@
 nav p {
 	font-size: 40px;
 	position: absolute;
-	padding-left: 185px;
-	padding-top: 275px;
+  padding-left: 180px;
 }
 
 
@@ -79,26 +83,24 @@ img:hover {
 
 /* BODY */
 
-body {
-   /*background-image: url(../imgs/Stormking2.jpg);*/
-  background-size: 1600px 1200px; 
+html {
   background-color: black;
-  color: white;
+  /*background-image: url(../imgs/abstract.jpg);*/
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  color:white;
   font-size: 20px;
   padding: 20px;
   font-family: 'Lora';
 }
 
-header {
-  font-size: 80px;
-  color:white;
-  text-align:center;
-  position:relative;
-  top: 100px;
-}
-
-h2 {
-position: relative;
+h1 {
+  font-size: 60px;
+  padding-top: 80px;
+  text-align: center;
+  position: relative;
 }
 
 a {
