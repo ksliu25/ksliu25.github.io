@@ -3,6 +3,8 @@
   padding: 0px;
 }
 
+/* SOCIAL MEDIA ICONS */
+
 /* FONT FACES */
 @font-face {
   font-family: 'Lora';
@@ -30,6 +32,7 @@
 	height: 320px;
 	width:32%;
 	display: inline-block;
+  overflow: hidden;
 }
 
 .pic1 img {
@@ -41,6 +44,8 @@
 	height: 320px;
 	width:32%;
 	display: inline-block;
+  overflow: hidden;
+
 }
 
 .pic2 img {
@@ -52,6 +57,7 @@
 	height: 320px;
 	width:32%;
 	display: inline-block;
+  overflow: hidden;
 }
 
 .pic3 img {
@@ -69,10 +75,10 @@ nav p {
 
 img {
 	border-radius: 25px;
-    opacity: 0.6;
-    transition: opacity 1s ease-in-out;
-    -moz-transition: opacity 1s ease-in-out;
-    -webkit-transition: opacity 1s ease-in-out;
+  opacity: 0.6;
+  transition: opacity 1s ease-in-out;
+  -moz-transition: opacity 1s ease-in-out;
+  -webkit-transition: opacity 1s ease-in-out;
 }
 img:hover {
     opacity: 1.0;
@@ -85,7 +91,10 @@ img:hover {
 
 html {
   background-color: black;
-  /*background-image: url(../imgs/abstract.jpg);*/
+ /* background-image:  linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ), url(../imgs/abstract.jpg);*/
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
