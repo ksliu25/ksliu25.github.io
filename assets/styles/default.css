@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Lobster-Regular';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/Lobster/Lobster-Regular.ttf') format('truetype');
+}
+
 * {
   margin: 0px;
   padding: 0px;
@@ -29,7 +36,6 @@
 /* TEXT TURNS WHITE, BACKGROUND TURNS APPROPRIATE COLOR */
 .icon:hover {
   color: white;
-  box-shadow: 0px 3px 0px #686868, 0px 3px 10px #7e7e7e;
 }
 
 .icon:active{
@@ -45,12 +51,6 @@
 }
 
 /* FONT FACES */
-@font-face {
-  font-family: 'Lobster-Regular';
-  font-style: normal;
-  font-weight: 400;
-  src: url('../fonts/Lobster/Lobster-Regular.ttf') format('truetype');
-}
 
 @font-face {
   font-family: 'Lora';
@@ -149,7 +149,7 @@ html {
   color:white;
   font-size: 20px;
   padding: 20px;
-  font-family: 'Lobster-Regular';
+  font-family: 'Lobster', 'Lobster-Regular';
   text-shadow: 3px 3px 3px rgb(98, 89, 89);
 }
 
