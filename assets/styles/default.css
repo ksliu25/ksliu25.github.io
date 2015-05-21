@@ -111,9 +111,11 @@ html {
   font-size: 20px;
   padding: 20px;
   font-family: 'Lobster-Regular';
+  text-shadow: 3px 3px 3px rgb(139, 129, 129);
 }
 
 h1 {
+  text-shadow: 3px 3px 3px rgb(139, 129, 129);
   font-weight: normal;
   font-size: 60px;
   padding-top: 80px;
