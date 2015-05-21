@@ -4,6 +4,45 @@
 }
 
 /* SOCIAL MEDIA ICONS */
+.buttons {
+  margin-left: auto;
+  margin-right: auto;
+  width:320px;
+}
+.icon {
+  margin-left: 20px;
+  display: inline-block;
+  position: relative;
+  color: black;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  font-size: 1.47em;
+  line-height: 1.70em;
+  background-color: #fff;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-transition:background-color 250ms ease 0s;
+  transition:background-color 250ms ease 0s;
+}
+/* TEXT TURNS WHITE, BACKGROUND TURNS APPROPRIATE COLOR */
+.icon:hover {
+  color: white;
+  box-shadow: 0px 3px 0px #686868, 0px 3px 10px #7e7e7e;
+}
+
+.icon:active{
+  box-shadow: inset 0px 1px 4px #3d3d3d, 0px 0px 0px #bdbdbd;
+  top: 3px;
+}
+
+.linkedin:hover{background-color: #29a0cc;}
+.email:hover{background-color: #d5b120;}
+.youtube:hover{background-color: #a32929;}
+.github:hover{background-color: gray};
+
+}
 
 /* FONT FACES */
 @font-face {
@@ -111,11 +150,11 @@ html {
   font-size: 20px;
   padding: 20px;
   font-family: 'Lobster-Regular';
-  text-shadow: 3px 3px 3px rgb(139, 129, 129);
+  text-shadow: 3px 3px 3px rgb(98, 89, 89);
 }
 
 h1 {
-  text-shadow: 3px 3px 3px rgb(139, 129, 129);
+  text-shadow: 3px 3px 3px rgb(98, 89, 89);
   font-weight: normal;
   font-size: 60px;
   padding-top: 80px;
@@ -125,6 +164,5 @@ h1 {
 
 a {
   text-decoration: none;
-  color: blue;
 }
 
