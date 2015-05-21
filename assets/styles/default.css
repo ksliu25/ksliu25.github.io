@@ -1,9 +1,34 @@
+/* FONT FACES */
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/lora/Lora-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'quicksand';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/quicksand/Quicksand-Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Acknowledgement';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/Acknowledgement/Acknowledgement.otf') format('opentype');
+}
+
 @font-face {
   font-family: 'Lobster-Regular';
   font-style: normal;
   font-weight: 400;
   src: url('../fonts/Lobster/Lobster-Regular.ttf') format('truetype');
 }
+
+/* RESET */
 
 * {
   margin: 0px;
@@ -46,32 +71,9 @@
 .linkedin:hover{background-color: #29a0cc;}
 .email:hover{background-color: #d5b120;}
 .youtube:hover{background-color: #a32929;}
-.github:hover{background-color: gray};
+.github:hover{background-color: gray;}
 
-}
 
-/* FONT FACES */
-
-@font-face {
-  font-family: 'Lora';
-  font-style: normal;
-  font-weight: 400;
-  src: url('../fonts/lora/Lora-Regular.ttf') format('truetype');
-}
-
-@font-face {
-	font-family: 'quicksand';
-	font-style: normal;
-	font-weight: 400;
-	src: url('../fonts/quicksand/Quicksand-Regular.otf') format('opentype');
-}
-
-@font-face {
-	font-family: 'Acknowledgement';
-	font-style: normal;
-	font-weight: 400;
-	src: url('../fonts/Acknowledgement/Acknowledgement.otf') format('opentype');
-}
 /* NAV */
 
 .pic1 {
