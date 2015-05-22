@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<head>
+  <title>Blog template</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="../assets/styles/blog-stylesheet.css">
+</head>
+
+<main>
+  <h1>Too many to count, it's Enumerable, get it? HA HA.</h1>
+  <h2>group_by, but also what does modulo really do?</h2>
+  <h4>5/22/15</h4>
+
+  <section>
+    <p>
+      We've seen a few popular ways to manipulate arrays but let's dig into group_by. What's interesting about group_by is that group_by will return a hash with the keys being what is evaluated from the block provided and the values being elements in the arrays that correspond with that evaluation. But enough of 'theory' and let's dig into the example provided by the Ruby docs themselves!
+    </p>
+    <br>
+    <code>
+      (1..6).group_by { |i| i%3 }   #=> {0=>[3, 6], 1=>[1, 4], 2=>[2, 5]}
+    </code>
+    <br>
+    <p>
+      Let's examine this a bit further. We're passing a range (which is nice because that means it'll respond to a few other Enumerable module methods just like hashes and arrays) of 1-6 and running this particular code block to it: <code> {|i| i%3 } </code> 
+    </p>
+    <p>
+      Which is essentially saying, in a range from 1-6, where an element i is modulo-ed by 3. In more simpler words, what remainders will come from numbers if divided by 3? The result then, we see, is as follows. 3 and 6 don't have any remainders, which makes sense because they're divisible by 3, or that 3 goes into 3 and 6 without any remainders. 3 goes 4 just once, which is why there's 1 remainder, and goes into 5 just once with a remainder of 2, which is why we see that key corresponding there as well. But if we can grasp that concept then it makes sense what group_by is doing.
+    </p>
+    <p>
+      The easiest way to explain modulo without getting into all that math nonsense, however, is to just to speak out loud, 3 goes into 1 0 times, and therefore 1 is leftover. 3 goes into 2 0 times, so therefore 2 is leftover!
+    </p>
+
+      <!-- copy and paste as many sections as you want to add paragraphs -->
+  </section>
+</main>
+
