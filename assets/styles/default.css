@@ -76,6 +76,10 @@
 
 /* NAV */
 
+.nav {
+  width: auto;
+}
+
 .pic1 {
   padding-left: 200px;
 	height: 260px;
