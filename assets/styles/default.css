@@ -39,10 +39,11 @@
 .buttons {
   margin-left: auto;
   margin-right: auto;
-  width:320px;
+  width: 27%;
+  /*width:320px;*/
 }
 .icon {
-  margin-left: 20px;
+  margin-left: 7%;
   display: inline-block;
   position: relative;
   color: black;
@@ -77,20 +78,20 @@
 /* NAV */
 
 .pic1 {
-  padding-left: 150px;
-	height: 260px;
+  padding-left: 13%;
+	height: 27%;
 	width:27%;
 	display: inline-block;
   overflow: hidden;
 }
 
 .pic1 img {
-    max-width: 100%;
+    max-width: 77%;
     max-height: 100%;
 }
 
 .pic2 {
-	height: 260px;
+	height: 27%;
 	width:27%;
 	display: inline-block;
   overflow: hidden;
@@ -98,26 +99,26 @@
 }
 
 .pic2 img {
-    max-width: 100%;
+    max-width: 77%;
     max-height: 100%;
 }
 
 .pic3 {
-	height: 260px;
+	height: 27%;
 	width:27%;
 	display: inline-block;
   overflow: hidden;
 }
 
 .pic3 img {
-    max-width: 100%;
+    max-width: 77%;
     max-height: 100%;
 }
 
 nav p {
 	font-size: 2em; /* 40 px/20 px */
 	position: absolute;
-  padding-left: 80px;
+  padding-left: 6.25%;
 }
 
 
@@ -150,8 +151,8 @@ html {
   /*-o-background-size: cover;*/
   /*background-size: cover;*/
   color:white;
-  font-size: 20px;
-  padding: 20px;
+  font-size: 1.2em;
+  padding: 1%;
   font-family: 'Lobster', 'Lobster-Regular';
   text-shadow: 3px 3px 3px rgb(98, 89, 89);
 }
@@ -160,7 +161,7 @@ h1 {
   text-shadow: 3px 3px 3px rgb(98, 89, 89);
   font-weight: normal;
   font-size: 4em; /* 80px / 20px */
-  padding-top: 150px;
+  padding-top: 10%;
   text-align: center;
   position: relative;
 }

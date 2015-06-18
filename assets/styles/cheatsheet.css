@@ -1,0 +1,24 @@
+.Leftcolumn {
+    font-family: Georgia;
+    font-size: 1em;
+    float: left;
+    height: 50em;
+    background-color: white;
+    width: 48%;
+}
+.Rightcolumn {
+    font-family: Courier;
+    float: right;
+    font-size: 1em;
+    background-color: #F0F0F0;
+    height: 50em;
+    width: 48%;
+}
+span {
+    font-weight: bold;
+    color: red;
+}
+.title {
+    font-weight: bold;
+    color: #660033;
+}

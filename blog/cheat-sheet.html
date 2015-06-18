@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<body>
+    <div class="Leftcolumn">
+        <p class="title">DEFINITIONS</p>
+        <hr>
+        <p> <span>SELECT</span> : The SELECT statement is used to select data from a database. The result is stored in a result table, called the result-set.</p>
+        <p> <span>WHERE:</span> The WHERE clause is used to extract only those records that fulfill a specified criterion.</p>
+        <p> <span>ORDER BY:</span> The ORDER BY keyword is used to sort the result-set by one or more columns. The ORDER BY keyword sorts the records in ascending order by default. To sort the records in a descending order, you can use the DESC keyword.</p>
+        <p> <span>JOIN:</span> INNER JOIN: Returns all rows when there is at least one match in BOTH tables LEFT JOIN: Return all rows from the left table, and the matched rows from the right table RIGHT JOIN: Return all rows from the right table, and the matched rows from the left table FULL JOIN: Return all rows when there is a match in ONE of the tables</p>
+        <p> <span>LIKE:</span> The LIKE operator is used to search for a specified pattern in a column.</p>
+        <p> <span>AND & OR:</span> Both operators are used to filter records based on more than one condition.</p>
+        <p> <span>DROP:</span> The DROP INDEX statement is used to delete an index in a table. The DROP TABLE statement is used to delete a table. The DROP DATABASE statement is used to delete a database.</p>
+    </div>
+    <div class="Rightcolumn">
+        <p class="title">EXAMPLES</p>
+        <hr>
+        <p>SELECT column_name(s) FROM table_name</p>
+        <p>SELECT * FROM table_name</p>
+        <hr>
+        <p>SELECT column_name(s) FROM table_name WHERE column_name operator value</p>
+        <hr>
+        <p>SELECT column_name(s) FROM table_name ORDER BY column_name [ASC|DESC]</p>
+        <br>
+        <hr>
+        <br>
+        <p>SELECT column_name(s) FROM table_name1 INNER JOIN table_name2 ON table_name1.column_name=table_name2.column_name</p>
+        <br>
+        <hr>
+        <p>SELECT column_name(s) FROM table_name WHERE column_name LIKE pattern</p>
+        <hr>
+        <p>SELECT column_name(s) FROM table_name WHERE condition AND|OR condition</p>
+        <hr>
+        <p>DROP INDEX table_name.index_name (SQL Server) DROP INDEX index_name ON table_name (MS Access) DROP INDEX index_name (DB2/Oracle) ALTER TABLE table_name DROP INDEX index_name (MySQL)</p>
+        <hr>
+    </div>
+</body>
