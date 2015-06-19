@@ -75,6 +75,9 @@
 
 
 /* NAV */
+nav {
+  width: 99%;
+}
 
 .pic1 {
   padding-left: 13%;
@@ -116,8 +119,8 @@
 
 nav p {
 	font-size: 2em; /* 40 px/20 px */
-	position: absolute;
-  padding-left: 6.25%;
+	/*position: fixed;*/
+  padding-left: 15%;
 }
 
 
