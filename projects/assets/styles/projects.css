@@ -1,0 +1,85 @@
+/* FONT FACES */
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/lora/Lora-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'quicksand';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/quicksand/Quicksand-Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Acknowledgement';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/Acknowledgement/Acknowledgement.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Lobster-Regular';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/Lobster/Lobster-Regular.ttf') format('truetype');
+}
+
+/* RESET */
+
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+/* BODY */
+
+html {
+  /*background-color: black;*/
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.3),
+      rgba(0, 0, 0, 0.3)
+    ), url(../imgs/binding_dark/binding_dark_@2X.png);
+  /*-webkit-background-size: cover;*/
+  /*-moz-background-size: cover;*/
+  /*-o-background-size: cover;*/
+  /*background-size: cover;*/
+  color:white;
+  font-size: 20px;
+  padding: 20px;
+  font-family: 'Lora';
+  text-shadow: 3px 3px 3px rgb(98, 89, 89);
+}
+
+.index, h2, h4, section {
+  margin-left: 60px;
+}
+
+.header {
+  font-family: 'Lobster-Regular';
+}
+
+h1 {
+  font-family: 'Lobster-Regular';
+  text-shadow: 3px 3px 3px rgb(98, 89, 89);
+  font-weight: normal;
+  font-size: 80px;
+  padding-top: 150px;
+  text-align: center;
+  position: relative;
+}
+
+h3 {
+  text-decoration: underline;
+  font-size: 1.5em;
+}
+
+a {
+  text-decoration: none;
+  color:orange;
+}
+
