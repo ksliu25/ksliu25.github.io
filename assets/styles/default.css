@@ -118,9 +118,9 @@ nav {
 }
 
 nav p {
-	font-size: 2em; /* 40 px/20 px */
+	font-size: 5.5vmin; /* 40 px/20 px */
 	/*position: fixed;*/
-  padding-left: 15%;
+  padding-left: 20%;
 }
 
 
@@ -162,7 +162,7 @@ html {
 h1 {
   text-shadow: 3px 3px 3px rgb(98, 89, 89);
   font-weight: normal;
-  font-size: 4em; /* 80px / 20px */
+  font-size: 8.5vmax; /* 80px / 20px */
   padding-top: 10%;
   text-align: center;
   position: relative;
