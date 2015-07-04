@@ -55,18 +55,46 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
 
 .debug {
     border: 1px solid red;
 }
 
-.p-xxl { padding: 10em; }
-.bgc-cool { background-color: blue; }
-.fl-l { float: left; }
-.fl-r { float: right; }
-.p-sm { padding: 0.6em; }
+.header {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 8vh;
+    text-align: center;
+}
 
 
+.page1 {
+    background: 
+}
+
+.pos-abs-b {
+    position: absolute;
+    bottom: 0px;
+    text-align: center;
+    margin: auto;
+}
+
+.font-sm {
+    font-size: 0.6em;
+}
+
+.fadeIn {
+  -webkit-animation: fadeIn 3s;
+  animation: fadeIn 3s;
+}
 
 
 
