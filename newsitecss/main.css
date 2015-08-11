@@ -86,6 +86,7 @@ textarea {
 
 .icon {
     color: black;
+    transition: opacity .3s ease-in-out;
 }
 
 .icon:hover {
