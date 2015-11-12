@@ -71,8 +71,23 @@ textarea {
 
 .header {
     font-family: 'Josefin Sans', sans-serif;
-    font-size: 8vh;
     text-align: center;
+}
+
+.font-h-lg {
+    font-size: 8vh;
+}
+
+.font-h-sm {
+    font-size: 2vh;
+}
+
+.font-h-md {
+    font-size: 4vh;
+}
+
+.blocker {
+    padding: 25px;
 }
 
 
@@ -109,12 +124,16 @@ textarea {
 }
 
 .font-sm {
-    font-size: 0.6em;
+    font-size: 0.8em;
 }
 
 .fadeIn {
   -webkit-animation: fadeIn 3s;
   animation: fadeIn 3s;
+}
+
+.img-md {
+    max-height: 25vh;
 }
 
 
