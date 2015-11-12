@@ -70,8 +70,13 @@ textarea {
 }
 
 .header {
+    /*font-family: 'Poiret One', cursive;*/
     font-family: 'Josefin Sans', sans-serif;
     text-align: center;
+}
+
+.font-h-md-l {
+    font-size: 6vh;
 }
 
 .font-h-lg {
