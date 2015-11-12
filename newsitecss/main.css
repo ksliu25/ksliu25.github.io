@@ -86,6 +86,10 @@ textarea {
     font-size: 4vh;
 }
 
+.blocker {
+    padding: 25px;
+}
+
 
 .page1 {
     background: url(../newsite/concrete_seamless/concrete_seamless.png);
