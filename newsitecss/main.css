@@ -66,13 +66,24 @@ textarea {
 }
 
 .debug {
-    border: 1px solid red;
+    border: 0px solid red;
 }
 
 .header {
     font-family: 'Josefin Sans', sans-serif;
-    font-size: 8vh;
     text-align: center;
+}
+
+.font-h-lg {
+    font-size: 8vh;
+}
+
+.font-h-sm {
+    font-size: 2vh;
+}
+
+.font-h-md {
+    font-size: 4vh;
 }
 
 
@@ -115,6 +126,10 @@ textarea {
 .fadeIn {
   -webkit-animation: fadeIn 3s;
   animation: fadeIn 3s;
+}
+
+.img-md {
+    max-height: 25vh;
 }
 
 
