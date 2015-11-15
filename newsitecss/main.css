@@ -73,6 +73,7 @@ textarea {
     /*font-family: 'Poiret One', cursive;*/
     font-family: 'Josefin Sans', sans-serif;
     text-align: center;
+    text-shadow: 2px 2px 2px rgba(127, 127, 127, 0.3);
 }
 
 .font-h-md-l {
