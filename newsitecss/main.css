@@ -3,7 +3,7 @@ html, body {
   height: 100vh;
   margin: 0;
   padding: 0;
-  background: url("../resources/playstation-pattern.png");
+  background: url("../resources/Debbie-pattern-small.png");
   background-repeat: repeat;
   font-family: 'Helvetica', sans-serif;
   font-size: 1.15em;
@@ -22,7 +22,7 @@ html, body {
 }
 
 .first-page {
-    background: url("../resources/pow-star.png");
+    /*background: url("../resources/pow-star.png");*/
     /*z-index: 0;*/
 }
 
@@ -30,17 +30,23 @@ html, body {
     z-index: -1;
     color: black;
     position: fixed;
-    width: 100vw;
-    height: 100vh;
+    left: 1em;
+    overflow-y: auto;
+    overflow-x: auto;
+    /*height: 100vh;*/
+}
+
+.svg-test {
+  margin-left: 6em;
 }
 
 .second-page {
-    background: url("../resources/cloth.png");
+    /*background: url("../resources/cloth.png");*/
     /*z-index: 30;*/
 }
 
-.second-page {
-    background: url("../resources/cloth.png");
+.third-page {
+    /*background: url("../resources/playstation-pattern.png");*/
     /*z-index: 40;*/
 }
 
