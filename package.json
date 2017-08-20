@@ -1,0 +1,15 @@
+{
+  "name": "color-theory",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "url": "git@github.com:thatnewwen/color-theory.git",
+    "type": "git"
+  },
+  "author": "Kenneth Liu <ksliu25@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-connect": "^5.0.0"
+  }
+}
