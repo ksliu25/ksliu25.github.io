@@ -1,0 +1,307 @@
+/* BASE STYLES */
+
+html, body {
+  /*width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-repeat: repeat;
+  font-family: 'Helvetica', sans-serif;
+  font-size: 1.15em;
+  line-height: 150%;*/
+}
+
+*, *:after, *:before { -webkit-box-sizing: border-box; box-sizing: border-box; }
+.clearfix:before, .clearfix:after { display: table; content: ''; }
+.clearfix:after { clear: both; }
+
+a {
+  outline: none;
+  color: #3498db;
+  text-decoration: none;
+}
+
+a:hover, a:focus {
+  color: #528cb3;
+}
+
+/* MODULES */
+
+.container {
+    background: white;
+    opacity: 0.9;
+}
+
+.full-width-div {
+    /*position: absolute;*/
+    width: 100%;
+    left: 0;
+}
+
+.navigation__menu__item {
+  position: relative;
+  font-family: 'Monoton';
+  text-transform: uppercase;
+  font-size: 3em;
+}
+
+.image {
+
+}
+
+.image--fixed-pos {
+    z-index: -1;
+    position: fixed;
+    left: 1em;
+    /*overflow-y: auto;*/
+    /*overflow-x: auto;*/
+    /*height: 100vh;*/
+}
+
+.image--equal-wh {
+    width: calc(20% + 20px);
+}
+
+.svg-test {
+  margin-left: 6em;
+}
+
+.section--theme-cloth {
+    background: url("../resources/cloth.png");
+}
+
+.section--theme-breathe {
+    background: url("../resources/fish-background.svg");
+    -webkit-animation: 30s linear 0s normal none infinite animate;
+    -moz-animation: 30s linear 0s normal none infinite animate;
+    -ms-animation: 30s linear 0s normal none infinite animate;
+    -o-animation: 30s linear 0s normal none infinite animate;
+    animation: 30s linear 0s normal none infinite animate;
+
+    }
+}
+
+.section--theme-pattern {
+    background: url("../resources/playstation-pattern.png");
+    /*-webkit-animation: 10s linear 0s normal none infinite animate;
+    -moz-animation: 10s linear 0s normal none infinite animate;
+    -ms-animation: 10s linear 0s normal none infinite animate;
+    -o-animation: 10s linear 0s normal none infinite animate;
+    animation: 10s linear 0s normal none infinite animate;*/
+
+    }
+}
+
+@-webkit-keyframes animate {
+  from {background-position:0 0;}
+  to {background-position: 500px 0;}
+}
+
+@-moz-keyframes animate {
+  from {background-position:0 0;}
+  to {background-position: 500px 0;}
+}
+
+@-ms-keyframes animate {
+  from {background-position:0 0;}
+  to {background-position: 500px 0;}
+}
+
+@-o-keyframes animate {
+  from {background-position:0 0;}
+  to {background-position: 500px 0;}
+}
+
+@keyframes animate {
+  from {background-position:0 0;}
+  to {background-position: 500px 0;}
+}
+
+.section--theme-bubble {
+    -webkit-clip-path: polygon(0 3%, 100% 0, 100% 100%, 0 100%);
+    clip-path: polygon(0 3%, 100% 0, 100% 100%, 0 100%);
+    background: url("../resources/Debbie-pattern-small.png");
+    background-attachment: fixed;
+}
+
+.section {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.10em;
+    line-height: 150%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: calc(20% + 20px);
+    padding-right: calc(20% + 20px);
+}
+
+.paragraph {
+
+}
+
+.paragraph__header {
+
+}
+
+.index-profile{
+  width: 400px;
+  height: 300px;
+  object-fit: cover;
+}
+
+.overlay{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: black;
+}
+
+.title-header{
+  padding: 50px;
+  text-align: center;
+}
+
+.title-header h1{
+  position: relative;
+  /*background: linear-gradient(270deg, #ff1602, #ff9433);*/
+  /*background: linear-gradient(270deg, #029dff, #00ffae);*/
+  background: linear-gradient(270deg, #ff2102, #eaff20);
+  background-size: 400% 400%;
+  margin-bottom: 0px;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  position: relative;
+  font-family: 'Monoton';
+  text-transform: uppercase;
+  font-size: 3em;
+
+  -webkit-animation: header-animation 10s ease infinite;
+  -moz-animation: header-animation 10s ease infinite;
+  animation: header-animation 10s ease infinite;
+}
+
+@-webkit-keyframes header-animation {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@-moz-keyframes header-animation {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@keyframes header-animation {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
+.image-container {
+  background: #42b078;
+}
+
+.image-container img {
+  max-width: none;
+  width: -webkit-calc(100% + 20px);
+  width: calc(100% + 20px);
+  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+  transition: opacity 0.35s, transform 0.35s;
+  -webkit-transform: translate3d(-10px,0,0);
+  transform: translate3d(-10px,0,0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.index-caption{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 10px 20px;
+  color: white;
+  font-family: 'Poppins';
+}
+
+.index-caption p{
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+.image-container{
+  position: relative;
+  width: 400px;
+  height: 300px;
+  overflow: hidden;
+}
+
+.image-container h2{
+  position: relative;
+  overflow: hidden;
+  font-size: 2em;
+  margin-bottom: 0px;
+  color: white;
+  font-weight: 600;
+}
+
+.image-container h2 span{
+  font-weight: 400;
+}
+
+.image-container:hover img {
+  opacity: 0.4;
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+}
+
+.image-container .index-caption {
+  text-align: left;
+}
+
+.image-container h2 {
+  position: relative;
+  overflow: hidden;
+  padding: 0.5em 0;
+}
+
+.image-container h2::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #fff;
+  content: '';
+  -webkit-transition: -webkit-transform 0.35s;
+  transition: transform 0.35s;
+  -webkit-transform: translate3d(-100%,0,0);
+  transform: translate3d(-100%,0,0);
+}
+
+.image-container:hover h2::after {
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+}
+
+.image-container p {
+  padding: 1em 0;
+  opacity: 0;
+  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+  transition: opacity 0.35s, transform 0.35s;
+  -webkit-transform: translate3d(100%,0,0);
+  transform: translate3d(100%,0,0);
+}
+
+.image-container:hover p {
+  opacity: 1;
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+}
+
+.home.container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
