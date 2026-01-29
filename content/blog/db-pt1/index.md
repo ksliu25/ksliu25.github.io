@@ -1,7 +1,7 @@
 ---
-title: Database Fundamentals - Optimistic and Pessimistic locking
+title: Database Fundamentals - Default MVCC behavior in PostgreSQL
 date: "2026-01-23"
-description: Reflections on optimistic and pessimistic locking specifically implemented in Spring boot with Postgres
+description: Exploring the motivations for optimistic and pessimistic locking specifically implemented in Spring boot with Postgres
 ---
 
 ## Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science
@@ -9,9 +9,6 @@ description: Reflections on optimistic and pessimistic locking specifically impl
 Postgres MVCC lets everyone read and write at the same time by keeping multiple versions of data. It doesn’t stop conflicts — it just avoids blocking.
 Optimistic and pessimistic locking are how the application decides what to do when conflicts matter.
 MVCC is optimistic in attitude (assume things won’t collide), but it doesn’t enforce correctness. Locking is where correctness gets enforced
-
-
-MVCC in Postgres is about _visibility_ and ensuring that when contention does happen a version of that data is still available, albeit old. Let's consider this convoluted scenario
 
 ```
 Imagine a giant concert stadium.
@@ -26,12 +23,9 @@ The Lost Update (The Conflict):
 
 Person A hits "Confirm." The database (Postgres) sees the seat is currently empty and marks it as "Sold to A."
 
-Person B hits "Confirm" a millisecond later.
+Person B hits "Confirm" a millisecond later and the transaction goes through
 ```
-
-In this default configuration concurrency results inw hat is called a "lost" update. In this case, if the seat had something like a "sold_to" column with an id, that could be overwritten by person B, meaning person A's update was "lost". Or, if it was a counter, it would be oversold.
-
-Make note that the concurrency in this case, although it says millisecond later, can specifically mean execution windows.
+Make note that the concurrency in this case, although it says millisecond later, can specifically mean "execution windows".
 
 Take a look at a default bread and butter spring boot implementaiton
 
@@ -53,7 +47,6 @@ public void purchaseTicket(Long ticketId) {
 }
 ```
 
-The "Overlapping Windows" Breakdown
 If you have two users, Alice and Bob, the sequence looks like this:
 
 ```
@@ -71,9 +64,7 @@ T6: Bob’s payment clears. His code executes the UPDATE to set Quantity = 0. Hi
 
 The Result: Two people paid, but the inventory only went down by 1.
 ```
-What's important to note is that the actual locking mechanism is on the actual update statement, but this leaves U.S. Open for selects or reads. So when we run a select statement to read something, that's where MVC comes in. It always shows you and ensures that there's quote, unquote, clean reads. As in that you're always going to get some sort of version of it in an old snapshot in this case.
-
-And I think what's important to note is that we call this a human timing level problem because there's application business logic and there's a lower level at the databse/persistence layer.
+I had a hard time forming a coherent mental model on this as I needed more and more concrete examples to understand what "concurrency" really meant in the context of "two database transactions come in at the same time!" (Which is a somewhat separate but related topic...)
 
 ```
 Why this is a "Human Level" problem
@@ -85,9 +76,13 @@ App level: Between the SELECT and the UPDATE, you might have business logic, loo
 
 If you use a "Long Conversation" (like a user opening an 'Edit' screen, going to get coffee, and then hitting 'Save'), the window isn't 2 seconds; it's 20 minutes. Plain MVCC is completely helpless here because the database cannot hold a lock for 20 minutes while a user is away from their keyboard.
 ```
-
-So the statement above is actually what I got from. Gemini. But I want to talk about the evolution in history of this because it helps build the intuition. A lot of these blog posts are just for me. I'm going to be the only person that reads it, but I think it's helpful for me to come back and read, hey, this is how monolithic web development applications evolve, and here's how we solve them using "new" techniques
+Talking more with Gemini, I wanted to know if these things occurred near the outset of web development because it just didn't make much sense to me that a user would enter an "edit" mode and have a long running db connection open for that long... but these ideas are very educational to explore and glean the intuition going from the very start to finish of modern web development.
 
 ```
-Phase 1: The "Wild West" (Plain MVCC)In the early days of simple web apps, we relied on the database's default behavior.The Flow: Alice reads data $\rightarrow$ Alice sees it on her screen $\rightarrow$ Alice clicks "Save" 10 minutes later $\rightarrow$ The app sends an UPDATE.The Problem: If Bob edited the same record while Alice was at lunch, Alice’s "Save" would blindly overwrite Bob’s changes. This is the Lost Update in a stateless environment.Intuition: The database is just a filing cabinet. It doesn't know Alice's "Save" is based on 10-minute-old information.
+Phase 1: The "Wild West" (Plain MVCC)In the early days of simple web apps, we relied on the database's default behavior.
+The Flow: Alice reads data > Alice sees it on her screen > Alice clicks "Save" 10 minutes later > The app sends an UPDATE.
+
+The Problem: If Bob edited the same record while Alice was at lunch, Alice’s "Save" would blindly overwrite Bob’s changes. This is the Lost Update in a stateless environment.
+
+Intuition: The database is just a filing cabinet. It doesn't know Alice's "Save" is based on 10-minute-old information.
 ```
