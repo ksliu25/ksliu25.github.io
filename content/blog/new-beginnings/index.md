@@ -1,108 +1,93 @@
 ---
-title: New Beginnings
-date: "2015-05-28T22:40:32.169Z"
-description: This is a custom description for SEO and Open Graph purposes, rather than the default generated excerpt. Simply add a description field to the frontmatter.
+title: Database Fundamentals - Optimistic and Pessimistic locking
+date: "2026-01-23"
+description: Reflections on optimistic and pessimistic locking specifically implemented in Spring boot with Postgres
 ---
 
-Far far away, behind the word mountains, far from the countries Vokalia and
-Consonantia, there live the blind texts. Separated they live in Bookmarksgrove
-right at the coast of the Semantics, a large language ocean. A small river named
-Duden flows by their place and supplies it with the necessary regelialia.
+## Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science
 
-## On deer horse aboard tritely yikes and much
+Postgres MVCC lets everyone read and write at the same time by keeping multiple versions of data. It doesn’t stop conflicts — it just avoids blocking.
+Optimistic and pessimistic locking are how the application decides what to do when conflicts matter.
+MVCC is optimistic in attitude (assume things won’t collide), but it doesn’t enforce correctness. Locking is where correctness gets enforced
 
-The Big Oxmox advised her not to do so, because there were thousands of bad
-Commas, wild Question Marks and devious Semikoli, but the Little Blind Text
-didn’t listen. She packed her seven versalia, put her initial into the belt and
-made herself on the way.
 
-- This however showed weasel
-- Well uncritical so misled
-  - this is very interesting
-- Goodness much until that fluid owl
+MVCC in Postgres is about _visibility_ and ensuring that when contention does happen a version of that data is still available, albeit old. Let's consider this convoluted scenario
 
-When she reached the first hills of the **Italic Mountains**, she had a last
-view back on the skyline of her hometown _Bookmarksgrove_, the headline of
-[Alphabet Village](http://google.com) and the subline of her own road, the Line
-Lane. Pityful a rhetoric question ran over her cheek, then she continued her
-way. On her way she met a copy.
+```
+Imagine a giant concert stadium.
 
-### Overlaid the jeepers uselessly much excluding
+The Snapshot (MVCC): Person A and Person B both walk up to their own separate electronic kiosks at the exact same time. When they touch the screen, the kiosk pulls a "snapshot" of the seating map. Both screens show one seat left (Seat 1A).
 
-But nothing the copy said could convince her and so it didn’t take long until a
-few insidious Copy Writers ambushed her, made her drunk with
-[Longe and Parole](http://google.com) and dragged her into their agency, where
-they abused her for their projects again and again. And if she hasn’t been
-rewritten, then they are still using her.
+The Interpretation: * Person A thinks: "Awesome, Seat 1A is free. I'll take it."
 
-> Far far away, behind the word mountains, far from the countries Vokalia and
-> Consonantia, there live the blind texts. Separated they live in Bookmarksgrove
-> right at the coast of the Semantics, a large language ocean.
+Person B thinks: "Awesome, Seat 1A is free. I'll take it."
 
-It is a paradisematic country, in which roasted parts of sentences fly into your
-mouth. Even the all-powerful Pointing has no control about the blind texts it is
-an almost unorthographic life One day however a small line of blind text by the
-name of Lorem Ipsum decided to leave for the far World of Grammar.
+The Lost Update (The Conflict):
 
-### According a funnily until pre-set or arrogant well cheerful
+Person A hits "Confirm." The database (Postgres) sees the seat is currently empty and marks it as "Sold to A."
 
-The Big Oxmox advised her not to do so, because there were thousands of bad
-Commas, wild Question Marks and devious Semikoli, but the Little Blind Text
-didn’t listen. She packed her seven versalia, put her initial into the belt and
-made herself on the way.
+Person B hits "Confirm" a millisecond later.
+```
 
-1.  So baboon this
-2.  Mounted militant weasel gregariously admonishingly straightly hey
-3.  Dear foresaw hungry and much some overhung
-4.  Rash opossum less because less some amid besides yikes jeepers frenetic
-    impassive fruitlessly shut
+In this default configuration concurrency results inw hat is called a "lost" update. In this case, if the seat had something like a "sold_to" column with an id, that could be overwritten by person B, meaning person A's update was "lost". Or, if it was a counter, it would be oversold.
 
-When she reached the first hills of the Italic Mountains, she had a last view
-back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet
-Village and the subline of her own road, the Line Lane. Pityful a rhetoric
-question ran over her cheek, then she continued her way. On her way she met a
-copy.
+Make note that the concurrency in this case, although it says millisecond later, can specifically mean execution windows.
 
-> The copy warned the Little Blind Text, that where it came from it would have
-> been rewritten a thousand times and everything that was left from its origin
-> would be the word "and" and the Little Blind Text should turn around and
-> return to its own, safe country.
+Take a look at a default bread and butter spring boot implementaiton
 
-But nothing the copy said could convince her and so it didn’t take long until a
-few insidious Copy Writers ambushed her, made her drunk with Longe and Parole
-and dragged her into their agency, where they abused her for their projects
-again and again. And if she hasn’t been rewritten, then they are still using
-her. Far far away, behind the word mountains, far from the countries Vokalia and
-Consonantia, there live the blind texts.
+```
+@Transactional
+public void purchaseTicket(Long ticketId) {
+    // 1. SELECT: Get current inventory
+    Ticket ticket = repo.findById(ticketId); // Inventory = 1
+    
+    if (ticket.getQuantity() > 0) {
+        
+        // 2. THE HUMAN WINDOW: 3rd party credit card call (takes 2 seconds)
+        paymentService.charge(user, price); 
+        
+        // 3. UPDATE: Decrement and save
+        ticket.setQuantity(ticket.getQuantity() - 1);
+        repo.save(ticket); 
+    }
+}
+```
 
-#### Silent delightfully including because before one up barring chameleon
+The "Overlapping Windows" Breakdown
+If you have two users, Alice and Bob, the sequence looks like this:
 
-Separated they live in Bookmarksgrove right at the coast of the Semantics, a
-large language ocean. A small river named Duden flows by their place and
-supplies it with the necessary regelialia. It is a paradisematic country, in
-which roasted parts of sentences fly into your mouth.
+```
+T1: Alice hits the endpoint. Her transaction starts. She executes SELECT and sees Quantity = 1.
 
-Even the all-powerful Pointing has no control about the blind texts it is an
-almost unorthographic life One day however a small line of blind text by the
-name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox
-advised her not to do so, because there were thousands of bad Commas, wild
-Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.
+T2: Bob hits the endpoint. His transaction starts. He executes SELECT and also sees Quantity = 1 because Alice hasn't changed anything yet.
 
-##### Wherever far wow thus a squirrel raccoon jeez jaguar this from along
+T3: Alice is waiting for the credit card API (the 2-second "Human Window").
 
-She packed her seven versalia, put her initial into the belt and made herself on
-the way. When she reached the first hills of the Italic Mountains, she had a
-last view back on the skyline of her hometown Bookmarksgrove, the headline of
-Alphabet Village and the subline of her own road, the Line Lane. Pityful a
-rhetoric question ran over her cheek, then she continued her way. On her way she
-met a copy.
+T4: Bob is also waiting for the credit card API.
 
-###### Slapped cozy a that lightheartedly and far
+T5: Alice’s payment clears. Her code executes the UPDATE to set Quantity = 0. Her transaction commits.
 
-The copy warned the Little Blind Text, that where it came from it would have
-been rewritten a thousand times and everything that was left from its origin
-would be the word "and" and the Little Blind Text should turn around and return
-to its own, safe country. But nothing the copy said could convince her and so it
-didn’t take long until a few insidious Copy Writers ambushed her, made her drunk
-with Longe and Parole and dragged her into their agency, where they abused her
-for their projects again and again.
+T6: Bob’s payment clears. His code executes the UPDATE to set Quantity = 0. His transaction commits.
+
+The Result: Two people paid, but the inventory only went down by 1.
+```
+What's important to note is that the actual locking mechanism is on the actual update statement, but this leaves U.S. Open for selects or reads. So when we run a select statement to read something, that's where MVC comes in. It always shows you and ensures that there's quote, unquote, clean reads. As in that you're always going to get some sort of version of it in an old snapshot in this case.
+
+And I think what's important to note is that we call this a human timing level problem because there's application business logic and there's a lower level at the databse/persistence layer.
+
+```
+Why this is a "Human Level" problem
+You mentioned this is for human-level timing. You're right because:
+
+DB level: Transactions usually take microseconds.
+
+App level: Between the SELECT and the UPDATE, you might have business logic, loops, or IO calls.
+
+If you use a "Long Conversation" (like a user opening an 'Edit' screen, going to get coffee, and then hitting 'Save'), the window isn't 2 seconds; it's 20 minutes. Plain MVCC is completely helpless here because the database cannot hold a lock for 20 minutes while a user is away from their keyboard.
+```
+
+So the statement above is actually what I got from. Gemini. But I want to talk about the evolution in history of this because it helps build the intuition. A lot of these blog posts are just for me. I'm going to be the only person that reads it, but I think it's helpful for me to come back and read, hey, this is how monolithic web development applications evolve, and here's how we solve them using "new" techniques
+
+```
+Phase 1: The "Wild West" (Plain MVCC)In the early days of simple web apps, we relied on the database's default behavior.The Flow: Alice reads data $\rightarrow$ Alice sees it on her screen $\rightarrow$ Alice clicks "Save" 10 minutes later $\rightarrow$ The app sends an UPDATE.The Problem: If Bob edited the same record while Alice was at lunch, Alice’s "Save" would blindly overwrite Bob’s changes. This is the Lost Update in a stateless environment.Intuition: The database is just a filing cabinet. It doesn't know Alice's "Save" is based on 10-minute-old information.
+```

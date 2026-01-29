@@ -9,10 +9,10 @@
  */
 module.exports = {
   siteMetadata: {
-    title: `Ken's Blog`,
+    title: `Ken's Feynman Dump`,
     author: {
       name: `Kenneth Liu`,
-      summary: `who lives and works in Chicago doing absolutely nothing`,
+      summary: `who needed a place to store extra brainspace`,
     },
     description: `A starter blog demonstrating what Gatsby can do.`,
     siteUrl: `https://gatsbystarterblogsource.gatsbyjs.io/`,
