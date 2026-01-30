@@ -1,6 +1,6 @@
 ---
 title: Database Fundamentals - Default MVCC behavior in PostgreSQL
-date: "2026-01-23"
+date: "2026-01-29"
 description: Exploring the motivations for optimistic and pessimistic locking specifically implemented in Spring boot with Postgres
 ---
 
