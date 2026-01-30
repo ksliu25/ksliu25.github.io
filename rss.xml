@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 29 Jan 2026 22:55:09 GMT</lastBuildDate><item><title><![CDATA[Database Fundamentals - Default MVCC behavior in PostgreSQL]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science Postgres MVCC lets…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/db-pt1/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/db-pt1/</guid><pubDate>Fri, 23 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 30 Jan 2026 05:27:07 GMT</lastBuildDate><item><title><![CDATA[Database Fundamentals - Default MVCC behavior in PostgreSQL]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science Postgres MVCC lets…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/db-pt1/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/db-pt1/</guid><pubDate>Thu, 29 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;
 &lt;p&gt;Postgres MVCC lets everyone read and write at the same time by keeping multiple versions of data. It doesn’t stop conflicts — it just avoids blocking.
 Optimistic and pessimistic locking are how the application decides what to do when conflicts matter.
 MVCC is optimistic in attitude (assume things won’t collide), but it doesn’t enforce correctness. Locking is where correctness gets enforced&lt;/p&gt;
@@ -61,8 +61,107 @@ The Flow: Alice reads data &gt; Alice sees it on her screen &gt; Alice clicks &q
 
 The Problem: If Bob edited the same record while Alice was at lunch, Alice’s &quot;Save&quot; would blindly overwrite Bob’s changes. This is the Lost Update in a stateless environment.
 
-Intuition: The database is just a filing cabinet. It doesn&apos;t know Alice&apos;s &quot;Save&quot; is based on 10-minute-old information.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[Database Fundamentals - Optimistic and Pessimistic locking]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science So we talked about…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/db-pt2/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/db-pt2/</guid><pubDate>Fri, 23 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;
+Intuition: The database is just a filing cabinet. It doesn&apos;t know Alice&apos;s &quot;Save&quot; is based on 10-minute-old information.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[Database Fundamentals - Pessimistic locking]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science So we talked about…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/db-pt2/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/db-pt2/</guid><pubDate>Thu, 29 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;
 &lt;p&gt;So we talked about the default behavior of multi version concurrency control in Postgres which is &quot;optimistic&quot; in nature. It&apos;s not thinking that there&apos;s going to be any contention. There are two different ways to handle this in application code (we&apos;re not going to cover the isolation levels at the db level because frankly I haven&apos;t explored them quite yet).&lt;/p&gt;
 &lt;p&gt;As we exemplified before, the default behavior has an implicit lock at the update and allows for &quot;clean&quot; reads making sure that there is no blocking when a resource is being read.&lt;/p&gt;
 &lt;p&gt;But for financial systems or systems that are of paramount importance -- including what we mentioned before with ticketing systems -- you CAN&apos;T just oversell tickets or lose a deposit, right?&lt;/p&gt;
-&lt;p&gt;This is where &quot;Pessimistic&quot; locking comes into play. And once again i want to reiterate that mvcc is simply about visibility and not blocking, but now we&apos;re introducing specific locking mechanisms that we&apos;ll see in the application code.&lt;/p&gt;</content:encoded></item></channel></rss>
+&lt;p&gt;This is where &quot;Pessimistic&quot; locking comes into play. And once again i want to reiterate that mvcc is simply about visibility and not blocking, but now we&apos;re introducing specific locking mechanisms that we&apos;ll see in the application code.&lt;/p&gt;
+&lt;p&gt;Let&apos;s imagine the same scenario with the kiosk as mentioned before in part 1, but this time with pessmistic locking:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Imagine a giant concert stadium.
+
+Pessimistic Locking: Person A and Person B both walk up to their own separate electronic kiosks at the exact same time. When they touch the screen, the kiosk pulls a &quot;snapshot&quot; of the seating map. Both screens show one seat left (Seat 1A).
+
+The Interpretation: * Person A thinks: &quot;Awesome, Seat 1A is free. I&apos;ll take it.&quot;
+
+Person B thinks: &quot;Awesome, Seat 1A is free. I&apos;ll take it.&quot;
+
+Person A clicks on the seat, this locks the seat for updating. Underneath the hood, in Hibernate, it translates to a FOR UPDATE select statement.
+
+A millisecond later Person B goes to click on the seat, but the kiosk just FREEZES and remains frozen until person A is finished with what they&apos;re doing. 
+
+Eventually, person B gets a notice saying &quot;Sorry, this seat has been taken&quot;.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is only an analogy as in REAL life at ticket master or this kiosk other mechanisms would be at play -- most likely redis caching with NX, soft locking and websockets, but that will be explored later.&lt;/p&gt;
+&lt;p&gt;Here&apos;s another alternative analogy:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;How to explain it simply:
+If you’re explaining this to someone else, use the &quot;Phone Line&quot; analogy:
+
+MVCC: It’s like a recorded message. Everyone can call and hear the status of the seat at the same time. The recording might be old, but the line is never busy.
+
+Pessimistic Locking: It’s like calling a human operator. If Alice is talking to the operator about Seat 1A, when Bob calls, he gets a busy signal (or stays on hold). He can&apos;t even get information about the seat until Alice hangs up.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let&apos;s look at this implemented in a simple Java Spring Boot snippet. At the repository level:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;public interface TicketRepository extends JpaRepository&amp;lt;Ticket, Long&gt; {
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query(&quot;SELECT t FROM Ticket t WHERE t.id = :id&quot;)
+    Optional&amp;lt;Ticket&gt; findByIdWithLock(@Param(&quot;id&quot;) Long id);
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And at the service level as before:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;@Service
+public class TicketService {
+
+    @Autowired
+    private TicketRepository repo;
+
+    @Transactional
+    public void purchaseTicket(Long ticketId) {
+        // 1. SELECT ... FOR UPDATE
+        // If another transaction has this lock, this thread HANGS here until the lock is released.
+        Ticket ticket = repo.findByIdWithLock(ticketId)
+            .orElseThrow(() -&gt; new RuntimeException(&quot;Ticket not found&quot;));
+
+        if (ticket.getQuantity() &gt; 0) {
+            
+            // 2. THE HUMAN WINDOW: 3rd party credit card call (2 seconds)
+            // Alice is safe here because she holds the DB lock. 
+            // Bob is stuck at step 1 on his kiosk/thread.
+            paymentService.charge(user, price); 
+            
+            // 3. UPDATE: Decrement and save
+            ticket.setQuantity(ticket.getQuantity() - 1);
+            repo.save(ticket); 
+        } // 4. TRANSACTION COMMITS: Lock is released here.
+    }
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Some notes from Gemini.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Important Considerations for Pessimistic Locking
+Timeouts: You generally don&apos;t want Bob to wait forever. You can set a hint to tell the DB to give up after a few seconds: @QueryHints({@QueryHint(name = &quot;javax.persistence.lock.timeout&quot;, value = &quot;3000&quot;)})
+
+Database Connections: Remember that while Bob is waiting, he is still holding onto a connection from your HikariCP connection pool. If you have 100 &quot;Bobs&quot; all waiting for one &quot;Alice,&quot; you can quickly exhaust your pool and crash the whole app.
+
+Deadlocks: If Alice locks Row 1 and wants Row 2, while Bob locks Row 2 and wants Row 1, they will wait for each other forever. Postgres will eventually detect this and kill one of the transactions.
+
+This is the most &quot;secure&quot; way to handle high-contention data like money or inventory, provided the &quot;Human Window&quot; (the payment call) is relatively short.
+
+Would you like to see the contrast with the Optimistic Locking (@Ver&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the real world since this causes so much hang, systems at scale push this waiting at a higher level. For ticketing systems, they relieve backpressure with Queue systems to let people into a presale event, and even at the sale event soft locks happen at a Redis cache level maybe partitioned by event_id and seat_id to ensure even distribution across the clusters to handle traffic.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/6dca5af9f93b3a687e19783878ae81f2/321ea/image.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 33.54430379746836%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAA7DAAAOwwHHb6hkAAABHklEQVR42j1RB3LDMAzz/3/Y5tpYjre89xRKMFF9x4MF0hBAB1EUwRgDYpplivtxgI9zTutWxLuEvz+8f/yZTNB0A67L4bqB8wKmeUVeVKjqDsfpPtyGoqwxLzu2/ULTDrC2RWFr4Sus26mz+3EjeIaxuEqQpoWS/TDjFWfitlDRmtX0CM0LrVzOj2zVohSxLLdaNOB7wTit6PoJRArSxTAuKkzkEPulbf4d0jHn/Qzfl/V4C34/fsRRqg3GppskzSVWr+54CQUZeZwWFaR7OmT0thu1tv2U9TgEv0/5KRKZTe6LmGal4IhRnJCjEzr0LhiTsSnkRYncf8CDlWEvWMqyvx6hLLzFJBHJcSZOcl0+HRoT6355EXtMwOJK/gDGKxieaRdIzwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;alt text&quot;
+        title=&quot;&quot;
+        src=&quot;/static/6dca5af9f93b3a687e19783878ae81f2/f058b/image.png&quot;
+        srcset=&quot;/static/6dca5af9f93b3a687e19783878ae81f2/c26ae/image.png 158w,
+/static/6dca5af9f93b3a687e19783878ae81f2/6bdcf/image.png 315w,
+/static/6dca5af9f93b3a687e19783878ae81f2/f058b/image.png 630w,
+/static/6dca5af9f93b3a687e19783878ae81f2/321ea/image.png 786w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Database Fundamentals - Optimistic locking]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/db-pt3/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/db-pt3/</guid><pubDate>Thu, 29 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;</content:encoded></item></channel></rss>
