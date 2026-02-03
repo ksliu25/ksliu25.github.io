@@ -1,4 +1,50 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 30 Jan 2026 05:27:07 GMT</lastBuildDate><item><title><![CDATA[Database Fundamentals - Default MVCC behavior in PostgreSQL]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science Postgres MVCC lets…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/db-pt1/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/db-pt1/</guid><pubDate>Thu, 29 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 03 Feb 2026 15:30:51 GMT</lastBuildDate><item><title><![CDATA[Database Fundamentals - Optimistic locking]]></title><description><![CDATA[As opposed to pessimistic locking which translates into FOR UPDATE from Hibernate, Optimistic locking simply passes on a "WHERE VERSION =…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/db-pt3/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/db-pt3/</guid><pubDate>Tue, 03 Feb 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;As opposed to pessimistic locking which translates into FOR UPDATE from Hibernate, Optimistic locking simply passes on a &quot;WHERE VERSION = 4&quot; in the update statement. This is small but significant change in the application code and end user flow. Since pessimistic locking LOCKS that row entirely, if we go back to the kiosk example they would reach a screen that would just HANG and see a spinner until the person editing that row finishes what they&apos;re doing (resulting in a TICKET SOLD notification).&lt;/p&gt;
+&lt;p&gt;Remember also that the first example is a &quot;LOST UPDATE&quot; as default behavior. If we don&apos;t catch and have business logic, at contention or concurrent behavior, SQL would see nothing wrong with the ticket inventory being decremented past 0. You can&apos;t even have busines logic to catch this either! Let&apos;s say you have something that says &quot;If inventory &amp;#x3C; 1, fail!&quot; in your java spring boot code. because that in flight transaction is reading stale data, it would think the inventory is still 1!&lt;/p&gt;
+&lt;p&gt;You&apos;d have to use some sort of UNIQUE CONSTRAINT as an integrity constraint, like this&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;ALTER TABLE tickets ADD CONSTRAINT quantity_not_negative CHECK (quantity &gt;= 0);&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Anyways. Let&apos;s move onto optimistic. If the default just goes through (or fails with that constraint above but the intent is a little wonky vs just having a pessmistic lock), and the pessmistic locks the screen, optmistic will simply pass along that WHERE VERSION is as we said. This DOESN&apos;T result in a SQL db failure as &quot;0 rows updated&quot; seem fine, but at the application spring boot level an OptimisticLockingFailureException happens!&lt;/p&gt;
+&lt;p&gt;Unlike the lock annotation, we add a @version annotation to our entity:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;@Entity
+public class Ticket {
+    @Id
+    private Long id;
+    private Integer quantity;
+
+    @Version  // &amp;lt;--- The Magic Ingredient
+    private Long version;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and then in our service&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;@Transactional
+public void purchaseTicket(Long ticketId) {
+    // 1. SELECT: Alice and Bob both get the ticket with version = 1
+    Ticket ticket = repo.findById(ticketId).get();
+
+    if (ticket.getQuantity() &gt; 0) {
+        paymentService.charge(user, price); // The &quot;Human Window&quot;
+        
+        ticket.setQuantity(ticket.getQuantity() - 1);
+        
+        // 2. SAVE: Alice succeeds.
+        // When Bob tries, Hibernate runs: 
+        // UPDATE ticket SET quantity=0, version=2 WHERE id=1 AND version=1;
+        // Bob&apos;s call fails here with OptimisticLockingFailureException.
+        repo.save(ticket);
+    }
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I tried using a kiosk analogy for this with Gemini, it summed it up as this:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;How it compares to your Kiosk thoughts:
+You mentioned: &quot;instead of hanging or saying it&apos;s out of date, we could display the same error again right, that the version is out of date if there&apos;s any concurrency?&quot;
+
+Exactly. The user experience is:
+
+Pessimistic: Bob waits for Alice to finish (Slow).
+
+Optimistic: Bob does all his work, but when he hits &quot;Confirm,&quot; he gets an immediate &quot;Sorry, someone beat you to it&quot; message (Fast, but potentially annoying for Bob).
+
+When to use which?
+Pessimistic: High contention (e.g., a &quot;Flash Sale&quot;). If you know 100 people are fighting for 1 item, don&apos;t let 99 people fill out credit card forms just to fail at the end. Make them wait.
+
+Optimistic: Low contention (e.g., editing a User Profile). It&apos;s rare that two people edit the same profile at the exact same second, so don&apos;t bother with the overhead of locks.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[Pagination]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/webdev-pagination/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/webdev-pagination/</guid><pubDate>Tue, 03 Feb 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;</content:encoded></item><item><title><![CDATA[Database Fundamentals - Default MVCC behavior in PostgreSQL]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science Postgres MVCC lets…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/db-pt1/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/db-pt1/</guid><pubDate>Thu, 29 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;
 &lt;p&gt;Postgres MVCC lets everyone read and write at the same time by keeping multiple versions of data. It doesn’t stop conflicts — it just avoids blocking.
 Optimistic and pessimistic locking are how the application decides what to do when conflicts matter.
 MVCC is optimistic in attitude (assume things won’t collide), but it doesn’t enforce correctness. Locking is where correctness gets enforced&lt;/p&gt;
@@ -130,9 +176,7 @@ Database Connections: Remember that while Bob is waiting, he is still holding on
 
 Deadlocks: If Alice locks Row 1 and wants Row 2, while Bob locks Row 2 and wants Row 1, they will wait for each other forever. Postgres will eventually detect this and kill one of the transactions.
 
-This is the most &quot;secure&quot; way to handle high-contention data like money or inventory, provided the &quot;Human Window&quot; (the payment call) is relatively short.
-
-Would you like to see the contrast with the Optimistic Locking (@Ver&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+This is the most &quot;secure&quot; way to handle high-contention data like money or inventory, provided the &quot;Human Window&quot; (the payment call) is relatively short.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;In the real world since this causes so much hang, systems at scale push this waiting at a higher level. For ticketing systems, they relieve backpressure with Queue systems to let people into a presale event, and even at the sale event soft locks happen at a Redis cache level maybe partitioned by event_id and seat_id to ensure even distribution across the clusters to handle traffic.&lt;/p&gt;
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
@@ -164,4 +208,4 @@ Would you like to see the contrast with the Optimistic Locking (@Ver&lt;/code&gt
         decoding=&quot;async&quot;
       /&gt;
   &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Database Fundamentals - Optimistic locking]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/db-pt3/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/db-pt3/</guid><pubDate>Thu, 29 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;</content:encoded></item></channel></rss>
+    &lt;/span&gt;&lt;/p&gt;</content:encoded></item></channel></rss>
