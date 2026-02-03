@@ -96,8 +96,6 @@ Database Connections: Remember that while Bob is waiting, he is still holding on
 Deadlocks: If Alice locks Row 1 and wants Row 2, while Bob locks Row 2 and wants Row 1, they will wait for each other forever. Postgres will eventually detect this and kill one of the transactions.
 
 This is the most "secure" way to handle high-contention data like money or inventory, provided the "Human Window" (the payment call) is relatively short.
-
-Would you like to see the contrast with the Optimistic Locking (@Ver
 ```
 
 In the real world since this causes so much hang, systems at scale push this waiting at a higher level. For ticketing systems, they relieve backpressure with Queue systems to let people into a presale event, and even at the sale event soft locks happen at a Redis cache level maybe partitioned by event_id and seat_id to ensure even distribution across the clusters to handle traffic.
