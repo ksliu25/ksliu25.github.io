@@ -1,6 +1,6 @@
 ---
 title: Database Fundamentals - Optimistic locking
-date: "2026-02-03"
+date: "2026-02-02"
 description: Reflections on optimistic locking specifically implemented in Spring boot with Postgres
 ---
 
