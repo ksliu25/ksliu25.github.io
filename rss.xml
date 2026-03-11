@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 05 Feb 2026 00:42:31 GMT</lastBuildDate><item><title><![CDATA[Pagination]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science Pagination is the…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/webdev-pagination/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/webdev-pagination/</guid><pubDate>Tue, 03 Feb 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 11 Mar 2026 14:40:47 GMT</lastBuildDate><item><title><![CDATA[Pagination]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science Pagination is the…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/webdev-pagination/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/webdev-pagination/</guid><pubDate>Tue, 03 Feb 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;
 &lt;p&gt;Pagination is the standard way of &quot;paging&quot; and batching listed data into sections for consumption. Imagine 1000 items in a list, we separate these by pages, and in web development the &quot;default&quot; pattern is using OFFSETS.&lt;/p&gt;
 &lt;p&gt;Logically we can think of offsets as &quot;start counting AFTER the given OFFSET&quot; so if the offset is 100, we begin counting after item 100. How this translates to code however, at least in Spring Boot -&gt; Hibernate -&gt; SQL, the resulting SQL becomes something like&lt;/p&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;SELECT * FROM users LIMIT 10 OFFSET 100&lt;/code&gt;&lt;/p&gt;
@@ -108,70 +108,7 @@ Optimistic: Bob does all his work, but when he hits &quot;Confirm,&quot; he gets
 When to use which?
 Pessimistic: High contention (e.g., a &quot;Flash Sale&quot;). If you know 100 people are fighting for 1 item, don&apos;t let 99 people fill out credit card forms just to fail at the end. Make them wait.
 
-Optimistic: Low contention (e.g., editing a User Profile). It&apos;s rare that two people edit the same profile at the exact same second, so don&apos;t bother with the overhead of locks.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[Database Fundamentals - Default MVCC behavior in PostgreSQL]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science Postgres MVCC lets…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/db-pt1/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/db-pt1/</guid><pubDate>Thu, 29 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;
-&lt;p&gt;Postgres MVCC lets everyone read and write at the same time by keeping multiple versions of data. It doesn’t stop conflicts — it just avoids blocking.
-Optimistic and pessimistic locking are how the application decides what to do when conflicts matter.
-MVCC is optimistic in attitude (assume things won’t collide), but it doesn’t enforce correctness. Locking is where correctness gets enforced&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Imagine a giant concert stadium.
-
-The Snapshot (MVCC): Person A and Person B both walk up to their own separate electronic kiosks at the exact same time. When they touch the screen, the kiosk pulls a &quot;snapshot&quot; of the seating map. Both screens show one seat left (Seat 1A).
-
-The Interpretation: * Person A thinks: &quot;Awesome, Seat 1A is free. I&apos;ll take it.&quot;
-
-Person B thinks: &quot;Awesome, Seat 1A is free. I&apos;ll take it.&quot;
-
-The Lost Update (The Conflict):
-
-Person A hits &quot;Confirm.&quot; The database (Postgres) sees the seat is currently empty and marks it as &quot;Sold to A.&quot;
-
-Person B hits &quot;Confirm&quot; a millisecond later and the transaction goes through&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Make note that the concurrency in this case, although it says millisecond later, can specifically mean &quot;execution windows&quot;.&lt;/p&gt;
-&lt;p&gt;Take a look at a default bread and butter spring boot implementaiton&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;@Transactional
-public void purchaseTicket(Long ticketId) {
-    // 1. SELECT: Get current inventory
-    Ticket ticket = repo.findById(ticketId); // Inventory = 1
-    
-    if (ticket.getQuantity() &gt; 0) {
-        
-        // 2. THE HUMAN WINDOW: 3rd party credit card call (takes 2 seconds)
-        paymentService.charge(user, price); 
-        
-        // 3. UPDATE: Decrement and save
-        ticket.setQuantity(ticket.getQuantity() - 1);
-        repo.save(ticket); 
-    }
-}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;If you have two users, Alice and Bob, the sequence looks like this:&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;T1: Alice hits the endpoint. Her transaction starts. She executes SELECT and sees Quantity = 1.
-
-T2: Bob hits the endpoint. His transaction starts. He executes SELECT and also sees Quantity = 1 because Alice hasn&apos;t changed anything yet.
-
-T3: Alice is waiting for the credit card API (the 2-second &quot;Human Window&quot;).
-
-T4: Bob is also waiting for the credit card API.
-
-T5: Alice’s payment clears. Her code executes the UPDATE to set Quantity = 0. Her transaction commits.
-
-T6: Bob’s payment clears. His code executes the UPDATE to set Quantity = 0. His transaction commits.
-
-The Result: Two people paid, but the inventory only went down by 1.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I had a hard time forming a coherent mental model on this as I needed more and more concrete examples to understand what &quot;concurrency&quot; really meant in the context of &quot;two database transactions come in at the same time!&quot; (Which is a somewhat separate but related topic...)&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Why this is a &quot;Human Level&quot; problem
-You mentioned this is for human-level timing. You&apos;re right because:
-
-DB level: Transactions usually take microseconds.
-
-App level: Between the SELECT and the UPDATE, you might have business logic, loops, or IO calls.
-
-If you use a &quot;Long Conversation&quot; (like a user opening an &apos;Edit&apos; screen, going to get coffee, and then hitting &apos;Save&apos;), the window isn&apos;t 2 seconds; it&apos;s 20 minutes. Plain MVCC is completely helpless here because the database cannot hold a lock for 20 minutes while a user is away from their keyboard.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Talking more with Gemini, I wanted to know if these things occurred near the outset of web development because it just didn&apos;t make much sense to me that a user would enter an &quot;edit&quot; mode and have a long running db connection open for that long... but these ideas are very educational to explore and glean the intuition going from the very start to finish of modern web development.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Phase 1: The &quot;Wild West&quot; (Plain MVCC)In the early days of simple web apps, we relied on the database&apos;s default behavior.
-The Flow: Alice reads data &gt; Alice sees it on her screen &gt; Alice clicks &quot;Save&quot; 10 minutes later &gt; The app sends an UPDATE.
-
-The Problem: If Bob edited the same record while Alice was at lunch, Alice’s &quot;Save&quot; would blindly overwrite Bob’s changes. This is the Lost Update in a stateless environment.
-
-Intuition: The database is just a filing cabinet. It doesn&apos;t know Alice&apos;s &quot;Save&quot; is based on 10-minute-old information.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[Database Fundamentals - Pessimistic locking]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science So we talked about…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/db-pt2/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/db-pt2/</guid><pubDate>Thu, 29 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;
+Optimistic: Low contention (e.g., editing a User Profile). It&apos;s rare that two people edit the same profile at the exact same second, so don&apos;t bother with the overhead of locks.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[Database Fundamentals - Pessimistic locking]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science So we talked about…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/db-pt2/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/db-pt2/</guid><pubDate>Thu, 29 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;
 &lt;p&gt;So we talked about the default behavior of multi version concurrency control in Postgres which is &quot;optimistic&quot; in nature. It&apos;s not thinking that there&apos;s going to be any contention. There are two different ways to handle this in application code (we&apos;re not going to cover the isolation levels at the db level because frankly I haven&apos;t explored them quite yet).&lt;/p&gt;
 &lt;p&gt;As we exemplified before, the default behavior has an implicit lock at the update and allows for &quot;clean&quot; reads making sure that there is no blocking when a resource is being read.&lt;/p&gt;
 &lt;p&gt;But for financial systems or systems that are of paramount importance -- including what we mentioned before with ticketing systems -- you CAN&apos;T just oversell tickets or lose a deposit, right?&lt;/p&gt;
@@ -272,4 +209,67 @@ This is the most &quot;secure&quot; way to handle high-contention data like mone
         decoding=&quot;async&quot;
       /&gt;
   &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;</content:encoded></item></channel></rss>
+    &lt;/span&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Database Fundamentals - Default MVCC behavior in PostgreSQL]]></title><description><![CDATA[Stuff taken directly from my conversations with chatgpt/Gemini because I'm too dumb to understand basic computer science Postgres MVCC lets…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/db-pt1/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/db-pt1/</guid><pubDate>Wed, 28 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Stuff taken directly from my conversations with chatgpt/Gemini because I&apos;m too dumb to understand basic computer science&lt;/h2&gt;
+&lt;p&gt;Postgres MVCC lets everyone read and write at the same time by keeping multiple versions of data. It doesn’t stop conflicts — it just avoids blocking.
+Optimistic and pessimistic locking are how the application decides what to do when conflicts matter.
+MVCC is optimistic in attitude (assume things won’t collide), but it doesn’t enforce correctness. Locking is where correctness gets enforced&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Imagine a giant concert stadium.
+
+The Snapshot (MVCC): Person A and Person B both walk up to their own separate electronic kiosks at the exact same time. When they touch the screen, the kiosk pulls a &quot;snapshot&quot; of the seating map. Both screens show one seat left (Seat 1A).
+
+The Interpretation: * Person A thinks: &quot;Awesome, Seat 1A is free. I&apos;ll take it.&quot;
+
+Person B thinks: &quot;Awesome, Seat 1A is free. I&apos;ll take it.&quot;
+
+The Lost Update (The Conflict):
+
+Person A hits &quot;Confirm.&quot; The database (Postgres) sees the seat is currently empty and marks it as &quot;Sold to A.&quot;
+
+Person B hits &quot;Confirm&quot; a millisecond later and the transaction goes through&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Make note that the concurrency in this case, although it says millisecond later, can specifically mean &quot;execution windows&quot;.&lt;/p&gt;
+&lt;p&gt;Take a look at a default bread and butter spring boot implementaiton&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;@Transactional
+public void purchaseTicket(Long ticketId) {
+    // 1. SELECT: Get current inventory
+    Ticket ticket = repo.findById(ticketId); // Inventory = 1
+    
+    if (ticket.getQuantity() &gt; 0) {
+        
+        // 2. THE HUMAN WINDOW: 3rd party credit card call (takes 2 seconds)
+        paymentService.charge(user, price); 
+        
+        // 3. UPDATE: Decrement and save
+        ticket.setQuantity(ticket.getQuantity() - 1);
+        repo.save(ticket); 
+    }
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you have two users, Alice and Bob, the sequence looks like this:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;T1: Alice hits the endpoint. Her transaction starts. She executes SELECT and sees Quantity = 1.
+
+T2: Bob hits the endpoint. His transaction starts. He executes SELECT and also sees Quantity = 1 because Alice hasn&apos;t changed anything yet.
+
+T3: Alice is waiting for the credit card API (the 2-second &quot;Human Window&quot;).
+
+T4: Bob is also waiting for the credit card API.
+
+T5: Alice’s payment clears. Her code executes the UPDATE to set Quantity = 0. Her transaction commits.
+
+T6: Bob’s payment clears. His code executes the UPDATE to set Quantity = 0. His transaction commits.
+
+The Result: Two people paid, but the inventory only went down by 1.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I had a hard time forming a coherent mental model on this as I needed more and more concrete examples to understand what &quot;concurrency&quot; really meant in the context of &quot;two database transactions come in at the same time!&quot; (Which is a somewhat separate but related topic...)&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Why this is a &quot;Human Level&quot; problem
+You mentioned this is for human-level timing. You&apos;re right because:
+
+DB level: Transactions usually take microseconds.
+
+App level: Between the SELECT and the UPDATE, you might have business logic, loops, or IO calls.
+
+If you use a &quot;Long Conversation&quot; (like a user opening an &apos;Edit&apos; screen, going to get coffee, and then hitting &apos;Save&apos;), the window isn&apos;t 2 seconds; it&apos;s 20 minutes. Plain MVCC is completely helpless here because the database cannot hold a lock for 20 minutes while a user is away from their keyboard.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Talking more with Gemini, I wanted to know if these things occurred near the outset of web development because it just didn&apos;t make much sense to me that a user would enter an &quot;edit&quot; mode and have a long running db connection open for that long... but these ideas are very educational to explore and glean the intuition going from the very start to finish of modern web development.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Phase 1: The &quot;Wild West&quot; (Plain MVCC)In the early days of simple web apps, we relied on the database&apos;s default behavior.
+The Flow: Alice reads data &gt; Alice sees it on her screen &gt; Alice clicks &quot;Save&quot; 10 minutes later &gt; The app sends an UPDATE.
+
+The Problem: If Bob edited the same record while Alice was at lunch, Alice’s &quot;Save&quot; would blindly overwrite Bob’s changes. This is the Lost Update in a stateless environment.
+
+Intuition: The database is just a filing cabinet. It doesn&apos;t know Alice&apos;s &quot;Save&quot; is based on 10-minute-old information.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item></channel></rss>
